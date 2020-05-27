@@ -3,6 +3,43 @@ from mpl_toolkits.mplot3d import Axes3D
 from sklearn import datasets, svm
 import numpy as np
 
+def plot_scattered(X, y, title):
+    """Pots special scatter plot"""
+
+    fig, axes = plt.subplots(nrows=1, ncols=1)
+    axes.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.Set1, edgecolor='k')
+    axes.set_xlabel('Sepal length')
+    axes.set_ylabel('Sepal width')
+    axes.set_xticks(())
+    axes.set_yticks(())
+    axes.set_title(title)
+
+    return fig, axes
+
+def plot_svm(X, y, clf, title):
+    """Plots SVM results"""
+
+    # Plot two class data with SVM result
+    fig, axes = plot_scattered(X, y, title)
+
+    # plot the decision function
+    xlim = axes.get_xlim()
+    ylim = axes.get_ylim()
+
+    # create grid to evaluate model
+    xx = np.linspace(xlim[0], xlim[1], 30)
+    yy = np.linspace(ylim[0], ylim[1], 30)
+    YY, XX = np.meshgrid(yy, xx)
+    xy = np.vstack([XX.ravel(), YY.ravel()]).T
+    Z = clf.decision_function(xy).reshape(XX.shape)
+
+    # plot decision boundary and margins
+    axes.contour(XX, YY, Z, colors='k', levels=[-1, 0, 1], alpha=0.5,
+               linestyles=['--', '-', '--'])
+    # plot support vectors
+    axes.scatter(clf.support_vectors_[:, 0], clf.support_vectors_[:, 1], s=100,
+               linewidth=1, facecolors='none', edgecolors='k')
+
 ################################################################################
 
 # Import Iris data set
@@ -14,13 +51,7 @@ y = iris.target
 ################################################################################
 
 # Plot raw data
-fig, axes = plt.subplots(nrows=1, ncols=1)
-axes.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.Set1, edgecolor='k')
-axes.set_xlabel('Sepal length')
-axes.set_ylabel('Sepal width')
-axes.set_xticks(())
-axes.set_yticks(())
-axes.set_title('Raw data')
+plot_scattered(X, y, 'Raw data')
 
 ################################################################################
 
@@ -32,47 +63,24 @@ for t in y:
 y = newy
 
 # Plot two class data
-fig, axes = plt.subplots(nrows=1, ncols=1)
-axes.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.Set1, edgecolor='k')
-axes.set_xlabel('Sepal length')
-axes.set_ylabel('Sepal width')
-axes.set_xticks(())
-axes.set_yticks(())
-axes.set_title('Two-class problem')
+plot_scattered(X, y, 'Two-class problem')
 
 ################################################################################
 
-# Run SVM on two class data
-#clf = svm.SVC() # non linear kernel!
+# Linear SVM
 clf = svm.SVC(kernel='linear', C=1000)
 clf.fit(X, y)
+plot_svm(X, y, clf, 'Two-class problem - Linear SVM')
 
-# Plot two class data with SVM result
-fig, axes = plt.subplots(nrows=1, ncols=1)
-axes.scatter(X[:, 0], X[:, 1], c=y, cmap=plt.cm.Set1, edgecolor='k')
-axes.set_xlabel('Sepal length')
-axes.set_ylabel('Sepal width')
-axes.set_xticks(())
-axes.set_yticks(())
-axes.set_title('Two-class problem - Linear SVM')
-
-# plot the decision function
-xlim = axes.get_xlim()
-ylim = axes.get_ylim()
-
-# create grid to evaluate model
-xx = np.linspace(xlim[0], xlim[1], 30)
-yy = np.linspace(ylim[0], ylim[1], 30)
-YY, XX = np.meshgrid(yy, xx)
-xy = np.vstack([XX.ravel(), YY.ravel()]).T
-Z = clf.decision_function(xy).reshape(XX.shape)
-
-# plot decision boundary and margins
-axes.contour(XX, YY, Z, colors='k', levels=[-1, 0, 1], alpha=0.5,
-           linestyles=['--', '-', '--'])
-# plot support vectors
-axes.scatter(clf.support_vectors_[:, 0], clf.support_vectors_[:, 1], s=100,
-           linewidth=1, facecolors='none', edgecolors='k')
+# Poly SVM
+#clf = svm.SVC(kernel='poly')
+#clf.fit(X, y)
+#plot_svm(X, y, clf, 'Two-class problem - Polynomial SVM')
+#
+## RBF SVM
+#clf = svm.SVC(kernel='rbf')
+#clf.fit(X, y)
+#plot_svm(X, y, clf, 'Two-class problem - RBF SVM')
 
 ################################################################################
 
