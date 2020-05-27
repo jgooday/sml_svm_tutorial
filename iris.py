@@ -40,6 +40,8 @@ def plot_svm(X, y, clf, title):
     axes.scatter(clf.support_vectors_[:, 0], clf.support_vectors_[:, 1], s=100,
                linewidth=1, facecolors='none', edgecolors='k')
 
+    return fig, axes
+
 ################################################################################
 
 # Import Iris data set
@@ -60,17 +62,16 @@ newy = []
 for t in y:
     if t==0: newy.append(0)
     else: newy.append(1)
-y = newy
 
 # Plot two class data
-plot_scattered(X, y, 'Two-class problem')
+#plot_scattered(X, newy, 'Separable two-class problem')
 
 ################################################################################
 
 # Linear SVM
 clf = svm.SVC(kernel='linear', C=1000)
-clf.fit(X, y)
-plot_svm(X, y, clf, 'Two-class problem - Linear SVM')
+clf.fit(X, newy)
+plot_svm(X, newy, clf, 'Separable two-class problem - Linear SVM')
 
 # Poly SVM
 #clf = svm.SVC(kernel='poly')
@@ -81,6 +82,50 @@ plot_svm(X, y, clf, 'Two-class problem - Linear SVM')
 #clf = svm.SVC(kernel='rbf')
 #clf.fit(X, y)
 #plot_svm(X, y, clf, 'Two-class problem - RBF SVM')
+
+################################################################################
+
+# Predict some points
+xtest = np.array([
+    [2.9, 1.7],
+    [4.3, 2.],
+    [3.15, 0.95],
+    [3.05, 0.6],
+    [3.6, 0.3],
+    [4.4, 1.]
+])
+ytest = clf.predict(xtest)
+
+fig, axes = plot_svm(X, newy, clf, 'Separable two-class problem - Linear SVM')
+axes.scatter(xtest[:, 0], xtest[:, 1], marker='x', c=ytest, cmap=plt.cm.Set1, edgecolor='k')
+
+################################################################################
+
+# Convert targest to two-class non-separable situation
+newy = []
+for t in y:
+    if t==2: newy.append(0)
+    else: newy.append(1)
+
+# Plot two class data
+#plot_scattered(X, newy, 'Non-separable two-class problem')
+
+################################################################################
+
+# Linear SVM
+clf = svm.SVC(kernel='linear', C=1000)
+clf.fit(X, newy)
+#plot_svm(X, newy, clf, 'Non-separable two-class problem - Linear SVM')
+
+## Poly SVM
+#clf = svm.SVC(kernel='poly')
+#clf.fit(X, newy)
+#plot_svm(X, newy, clf, 'Non-separable two-class problem - Polynomial SVM')
+#
+## RBF SVM
+#clf = svm.SVC(kernel='rbf')
+#clf.fit(X, newy)
+#plot_svm(X, newy, clf, 'Non-separable two-class problem - RBF SVM')
 
 ################################################################################
 
