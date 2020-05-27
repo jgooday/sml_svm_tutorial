@@ -71,7 +71,7 @@ for t in y:
 # Linear SVM
 clf = svm.SVC(kernel='linear', C=1000)
 clf.fit(X, newy)
-plot_svm(X, newy, clf, 'Separable two-class problem - Linear SVM')
+#plot_svm(X, newy, clf, 'Separable two-class problem - Linear SVM')
 
 # Poly SVM
 #clf = svm.SVC(kernel='poly')
@@ -96,8 +96,8 @@ xtest = np.array([
 ])
 ytest = clf.predict(xtest)
 
-fig, axes = plot_svm(X, newy, clf, 'Separable two-class problem - Linear SVM')
-axes.scatter(xtest[:, 0], xtest[:, 1], marker='x', c=ytest, cmap=plt.cm.Set1, edgecolor='k')
+#fig, axes = plot_svm(X, newy, clf, 'Separable two-class problem - Linear SVM')
+#axes.scatter(xtest[:, 0], xtest[:, 1], marker='x', c=ytest, cmap=plt.cm.Set1, edgecolor='k')
 
 ################################################################################
 
@@ -115,7 +115,7 @@ for t in y:
 # Linear SVM
 clf = svm.SVC(kernel='linear', C=1000)
 clf.fit(X, newy)
-#plot_svm(X, newy, clf, 'Non-separable two-class problem - Linear SVM')
+plot_svm(X, newy, clf, 'Non-separable two-class problem - Linear SVM')
 
 ## Poly SVM
 #clf = svm.SVC(kernel='poly')
@@ -126,6 +126,22 @@ clf.fit(X, newy)
 #clf = svm.SVC(kernel='rbf')
 #clf.fit(X, newy)
 #plot_svm(X, newy, clf, 'Non-separable two-class problem - RBF SVM')
+
+################################################################################
+
+# Predict some points
+xtest = np.array([
+    [2.9, 2.2],
+    [3.6, 0.9],
+    [2.7, 0.37],
+    [2.9, 1.6],
+    [3.6, 1.9],
+    [3.05, 1.6]
+])
+ytest = clf.predict(xtest)
+
+fig, axes = plot_svm(X, newy, clf, 'Non-separable two-class problem - Linear SVM')
+axes.scatter(xtest[:, 0], xtest[:, 1], marker='x', c=ytest, cmap=plt.cm.Set1, edgecolor='k')
 
 ################################################################################
 
